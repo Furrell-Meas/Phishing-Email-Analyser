@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="Phishing Email Analyser - a privacy-first browser-based educational phishing triage tool."
+    >
+
+    <title>Phishing Email Analyser</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="brand">
+                <div class="brand-icon">⌁</div>
+
+                <div>
+                    <h1>Phishing Email Analyser</h1>
+                    <p>Privacy-first email security triage</p>
+                </div>
+            </div>
+
+            <div class="privacy-badge">
+                <span class="privacy-dot"></span>
+                Local analysis
+            </div>
+        </div>
+    </header>
+
+
+    <main class="container">
+
+        <section class="hero">
+            <div>
+                <p class="eyebrow">SECURITY ANALYSIS TOOL</p>
+
+                <h2>
+                    Analyse suspicious emails
+                    <span>without uploading them.</span>
+                </h2>
+
+                <p class="hero-description">
+                    Identify common phishing and social-engineering warning signs
+                    directly inside your browser.
+                </p>
+            </div>
+        </section>
+
+
+        <section class="privacy-notice">
+            <div class="notice-icon">🔒</div>
+
+            <div>
+                <strong>Your email stays in your browser</strong>
+
+                <p>
+                    Analysis is performed locally using JavaScript.
+                    Email contents are not uploaded to a server, AI provider,
+                    analytics service or external API.
+                </p>
+            </div>
+        </section>
+
+
+        <section class="workspace">
+
+            <div class="input-panel panel">
+
+                <div class="panel-header">
+                    <div>
+                        <p class="section-label">EMAIL INPUT</p>
+                        <h3>Paste suspicious email</h3>
+                    </div>
+
+                    <span id="characterCount">0 characters</span>
+                </div>
+
+
+                <label for="emailInput" class="sr-only">
+                    Email contents
+                </label>
+
+                
+                <textarea
+                    id="emailInput"
+                    placeholder="Paste the email contents here..."
+                    spellcheck="false"
+                    maxlength="50000"
+                    autocomplete="off"
+                    autocapitalize="off"
+                ></textarea>
+
+
+
+                <div class="input-actions">
+
+                    <button
+                        id="analyseButton"
+                        class="primary-button"
+                        type="button"
+                    >
+                        <span>Analyse Email</span>
+                        <span>→</span>
+                    </button>
+
+                    <button
+                        id="clearButton"
+                        class="secondary-button"
+                        type="button"
+                    >
+                        Clear
+                    </button>
+
+                </div>
+
+
+                <div class="example-section">
+
+                    <div class="example-header">
+                        <span>DEMONSTRATION EMAILS</span>
+                        <span>Fictional examples</span>
+                    </div>
+
+                    <div class="example-buttons">
+
+                        <button
+                            class="example-button"
+                            data-example="obvious"
+                        >
+                            Obvious phishing
+                        </button>
+
+                        <button
+                            class="example-button"
+                            data-example="sophisticated"
+                        >
+                            Sophisticated phishing
+                        </button>
+
+                        <button
+                            class="example-button"
+                            data-example="microsoft"
+                        >
+                            Fake Microsoft 365
+                        </button>
+
+                        <button
+                            class="example-button"
+                            data-example="parcel"
+                        >
+                            Fake parcel delivery
+                        </button>
+
+                        <button
+                            class="example-button"
+                            data-example="invoice"
+                        >
+                            Fake invoice / BEC
+                        </button>
+
+                        <button
+                            class="example-button"
+                            data-example="legitimate"
+                        >
+                            Legitimate email
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="results-panel panel" id="resultsPanel">
+
+                <div class="empty-state" id="emptyState">
+
+                    <div class="empty-icon">◎</div>
+
+                    <h3>Ready for analysis</h3>
+
+                    <p>
+                        Paste an email and select
+                        <strong>Analyse Email</strong> to identify
+                        potential warning signs.
+                    </p>
+
+                    <div class="empty-features">
+                        <span>URL analysis</span>
+                        <span>Social engineering</span>
+                        <span>Header checks</span>
+                        <span>Explainable scoring</span>
+                    </div>
+
+                </div>
+
+
+                <div id="resultsContent" class="results-content hidden">
+
+                    <div class="risk-summary">
+
+                        <div class="score-ring" id="scoreRing">
+                            <div>
+                                <strong id="riskScore">0</strong>
+                                <span>/ 100</span>
+                            </div>
+                        </div>
+
+                        <div class="risk-information">
+
+                            <p class="section-label">ASSESSMENT</p>
+
+                            <h3 id="riskClassification">
+                                Low Risk
+                            </h3>
+
+                            <p id="riskSummary">
+                                No significant warning signs were detected.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="result-section">
+
+                        <div class="result-section-header">
+                            <div>
+                                <p class="section-label">DETECTED INDICATORS</p>
+                                <h3>Why this result?</h3>
+                            </div>
+
+                            <span id="indicatorCount">
+                                0 indicators
+                            </span>
+                        </div>
+
+                        <div id="indicatorsList" class="indicators-list">
+                        </div>
+
+                    </div>
+
+
+                    <div class="result-section recommendations-section">
+
+                        <div>
+                            <p class="section-label">NEXT STEPS</p>
+                            <h3>What should you do?</h3>
+                        </div>
+
+                        <div id="recommendationsList">
+                        </div>
+
+                    </div>
+
+
+                    <div class="assessment-disclaimer">
+
+                        <strong>Important limitation</strong>
+
+                        <p>
+                            This tool is an educational triage tool.
+                            It identifies common warning signs but cannot
+                            definitively determine whether an email is
+                            malicious or safe.
+                        </p>
+
+                        <p>
+                            Do not click suspicious links or open attachments
+                            merely to test them. Independently verify important
+                            messages using the organisation's official website,
+                            application or known contact information.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="how-it-works">
+
+            <div class="section-heading">
+                <p class="section-label">HOW IT WORKS</p>
+                <h2>Transparent analysis</h2>
+
+                <p>
+                    The analyser uses predefined cybersecurity indicators.
+                    There is no hidden AI model and no external service.
+                </p>
+            </div>
+
+
+            <div class="feature-grid">
+
+                <article class="feature-card">
+                    <span class="feature-number">01</span>
+                    <h3>Inspect</h3>
+                    <p>
+                        The browser examines the email text, URLs,
+                        attachment references and available headers.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <span class="feature-number">02</span>
+                    <h3>Score</h3>
+                    <p>
+                        Each detected warning sign contributes a defined
+                        number of points to the risk score.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <span class="feature-number">03</span>
+                    <h3>Explain</h3>
+                    <p>
+                        Every detected indicator is displayed so the user
+                        can understand why it affected the result.
+                    </p>
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <section class="scoring-section">
+
+            <div class="section-heading">
+                <p class="section-label">SCORING MODEL</p>
+                <h2>Defined warning-sign weights</h2>
+
+                <p>
+                    The score is deliberately explainable. These are
+                    warning-sign weights, not a probability that an email
+                    is malicious.
+                </p>
+            </div>
+
+
+            <div class="scoring-table-wrapper">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Indicator</th>
+                            <th>Points</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>Urgency / pressure language</td>
+                            <td>+10</td>
+                        </tr>
+
+                        <tr>
+                            <td>Account suspension / closure threat</td>
+                            <td>+15</td>
+                        </tr>
+
+                        <tr>
+                            <td>Password request</td>
+                            <td>+20</td>
+                        </tr>
+
+                        <tr>
+                            <td>MFA / verification code request</td>
+                            <td>+20</td>
+                        </tr>
+
+                        <tr>
+                            <td>Payment / gift-card request</td>
+                            <td>+15</td>
+                        </tr>
+
+                        <tr>
+                            <td>Bank-detail change request</td>
+                            <td>+20</td>
+                        </tr>
+
+                        <tr>
+                            <td>Suspicious URL</td>
+                            <td>+15</td>
+                        </tr>
+
+                        <tr>
+                            <td>Shortened URL</td>
+                            <td>+10</td>
+                        </tr>
+
+                        <tr>
+                            <td>Raw IP address URL</td>
+                            <td>+15</td>
+                        </tr>
+
+                        <tr>
+                            <td>Credential harvesting language</td>
+                            <td>+20</td>
+                        </tr>
+
+                        <tr>
+                            <td>Executable attachment</td>
+                            <td>+20</td>
+                        </tr>
+
+                        <tr>
+                            <td>Macro-enabled attachment</td>
+                            <td>+15</td>
+                        </tr>
+
+                        <tr>
+                            <td>Sender / Reply-To mismatch</td>
+                            <td>+15</td>
+                        </tr>
+
+                        <tr>
+                            <td>SPF failure</td>
+                            <td>+15</td>
+                        </tr>
+
+                        <tr>
+                            <td>DKIM failure</td>
+                            <td>+15</td>
+                        </tr>
+
+                        <tr>
+                            <td>DMARC failure</td>
+                            <td>+15</td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+
+        <div class="container footer-content">
+
+            <div>
+                <strong>Phishing Email Analyser</strong>
+                <p>
+                    Educational cybersecurity project.
+                </p>
+            </div>
+
+            <p>
+                No accounts · No tracking · No external APIs
+            </p>
+
+        </div>
+
+    </footer>
+
+
+    <script src="app.js"></script>
+
+</body>
+</html>
